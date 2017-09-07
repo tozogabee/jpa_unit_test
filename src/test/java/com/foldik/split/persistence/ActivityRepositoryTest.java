@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -39,6 +40,41 @@ public class ActivityRepositoryTest {
         Iterable<Activity> result = underTest.findAll();
         Activity resultActivity = result.iterator().next();
         assertThat(resultActivity.getActivityName(), is("Programming"));
+    }
+
+    @Test
+    public void addActivityBetweemTwoDates()
+    {
+        Activity activity1=new Activity();
+        Activity activity2=new Activity();
+        Activity activity3=new Activity();
+
+        //Activity1 settings
+        activity1.setActivityName("Java Development");
+        activity1.setStartTime(LocalDateTime.parse("2015-09-02T15:30:25"));
+        activity1.setEndTime(LocalDateTime.parse("2016-09-15T16:45:12"));
+        underTest.save(activity1);
+
+
+        //Activity2 settings
+        activity2.setActivityName("Embedded System Development");
+        activity2.setStartTime(LocalDateTime.parse("2015-10-20T17:30:00"));
+        activity2.setEndTime(LocalDateTime.parse("2016-10-20T17:30:00"));
+        underTest.save(activity2);
+
+        //Activity3 settings
+        activity3.setActivityName("LeaderShip skills");
+        activity3.setStartTime(LocalDateTime.parse("2015-11-20T17:30:00"));
+        activity3.setEndTime(LocalDateTime.parse("2016-12-22T17:30:00"));
+        underTest.save(activity3);
+
+
+        List<Activity> results = underTest.findByStartTimeBetween(LocalDateTime.parse("2015-10-02T15:30:25"),LocalDateTime.parse("2015-10-22T17:30:00"));
+
+        //assertThat(results.get(0).getActivityName(),is("Java Development"));
+        assertThat(results.get(0).getActivityName(),is("Embedded System Development"));
+        //assertThat(results.get(2).getActivityName(),is("LeaderShip skills"));
+
     }
 
 }
